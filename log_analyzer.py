@@ -1,36 +1,18 @@
 # Cybersecurity Log Monitor
-# Analyzes security logs and detects suspicious login activity.
-
-LOG_FILE = "sample_logs.txt"
+# Analyzes system logs and detects suspicious login activity
 
 failed_attempts = 0
-successful_logins = 0
 
-print("=== Cybersecurity Log Monitor ===")
-print()
+with open("sample_logs.txt", "r") as file:
+    logs = file.readlines()
 
-try:
-    with open(LOG_FILE, "r") as file:
-        logs = file.readlines()
+for log in logs:
+    if "FAILED" in log:
+        failed_attempts += 1
 
-    for log in logs:
-        log = log.strip()
+print("Total failed login attempts:", failed_attempts)
 
-        if "SUCCESS" in log:
-            successful_logins += 1
-
-        elif "FAILED" in log:
-            failed_attempts += 1
-
-    print("Total successful logins:", successful_logins)
-    print("Total failed login attempts:", failed_attempts)
-    print()
-
-    if failed_attempts >= 3:
-        print("ALERT: Suspicious login activity detected!")
-        print("Possible brute-force attack.")
-    else:
-        print("No suspicious activity detected.")
-
-except FileNotFoundError:
-    print("ERROR: sample_logs.txt was not found.")
+if failed_attempts >= 3:
+    print("ALERT: Possible brute-force attack detected!")
+else:
+    print("No suspicious activity detected.")
